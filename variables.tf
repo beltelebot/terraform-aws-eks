@@ -19,6 +19,11 @@ variable "cluster_name" {
   type        = string
 }
 
+variable "region" {
+  description = "region of the EKS cluster."
+  type        = string
+}
+
 variable "cluster_security_group_id" {
   description = "If provided, the EKS cluster will be attached to this security group. If not given, a security group will be created with necessary ingress/egress to work with the workers"
   type        = string
