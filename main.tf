@@ -93,6 +93,7 @@ module "worker_groups" {
 }
 
 module "node_groups" {
+  depends_on = [module.control_plane]
   source = "./modules/node_groups"
 
   cluster_name = module.control_plane.cluster_id
