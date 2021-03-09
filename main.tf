@@ -91,7 +91,34 @@ module "eks-node-group" {
   }
 }
   
-  
+module "worker_groups" {
+  source = "./modules/worker_groups"
+
+  cluster_name              = module.control_plane.cluster_id
+  cluster_security_group_id = module.control_plane.cluster_security_group_id
+
+  attach_worker_cni_policy              = var.attach_worker_cni_policy
+  create_eks                            = var.create_eks
+  iam_path                              = var.iam_path
+  manage_worker_iam_resources           = var.manage_worker_iam_resources
+  permissions_boundary                  = var.permissions_boundary
+  subnets                               = var.subnets
+  tags                                  = var.tags
+  vpc_id                                = var.vpc_id
+  worker_additional_security_group_ids  = var.worker_additional_security_group_ids
+  worker_ami_name_filter                = var.worker_ami_name_filter
+  worker_ami_name_filter_windows        = var.worker_ami_name_filter_windows
+  worker_ami_owner_id                   = var.worker_ami_owner_id
+  worker_ami_owner_id_windows           = var.worker_ami_owner_id_windows
+  worker_create_initial_lifecycle_hooks = var.worker_create_initial_lifecycle_hooks
+  worker_create_security_group          = var.worker_create_security_group
+  worker_groups                         = var.worker_groups
+  worker_groups_additional_policies     = var.worker_groups_additional_policies
+  worker_groups_defaults                = var.worker_groups_defaults
+  worker_groups_role_name               = var.worker_groups_role_name
+  worker_security_group_id              = var.worker_security_group_id
+  worker_sg_ingress_from_port           = var.worker_sg_ingress_from_port
+}  
   
 module "aws_auth" {
   source = "./modules/aws_auth"
