@@ -125,5 +125,5 @@ output "worker_iam_role_arn" {
 
 output "node_groups" {
   description = "Outputs from EKS node groups. Map of maps, keyed by var.node_groups keys"
-  value       = module.node_groups.node_groups
+  value       = module.eks-node-group
 }
