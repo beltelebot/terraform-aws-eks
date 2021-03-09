@@ -75,8 +75,8 @@ module "eks-node-group" {
   min_size     = 1
   max_size     = 3
 
-  instance_types = ["t3.large","t2.large"]
-  capacity_type  = "SPOT"
+  instance_types = ["t3.large"]
+#  capacity_type  = "SPOT"
 
   ec2_ssh_key = "prodkey2"
 
