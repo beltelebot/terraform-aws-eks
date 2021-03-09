@@ -64,9 +64,11 @@ module "control_plane" {
 }
 
 module "worker_groups" {
+depends_on [module.control_plane]
   source = "./modules/worker_groups"
 
-  cluster_name              = module.control_plane.cluster_id
+  cluster_name = data.aws_eks_cluster.cluster.name
+#  cluster_name              = module.control_plane.cluster_id
   cluster_security_group_id = module.control_plane.cluster_security_group_id
 
   attach_worker_cni_policy              = var.attach_worker_cni_policy
@@ -93,6 +95,7 @@ module "worker_groups" {
 }
 
 module "node_groups" {
+  depends_on [module.control_plane]
   source = "./modules/node_groups"
 
   cluster_name = data.aws_eks_cluster.cluster.name
