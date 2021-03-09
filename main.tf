@@ -66,7 +66,9 @@ module "control_plane" {
 module "worker_groups" {
   source = "./modules/worker_groups"
 
-  cluster_name              = module.control_plane.cluster_id
+  cluster_name = "${var.cluster_name}-${random_string.eksname.result}"
+
+#  cluster_name              = module.control_plane.cluster_id
   cluster_security_group_id = module.control_plane.cluster_security_group_id
 
   attach_worker_cni_policy              = var.attach_worker_cni_policy
