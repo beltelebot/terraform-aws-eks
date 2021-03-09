@@ -99,7 +99,7 @@ module "node_groups" {
   source = "./modules/node_groups"
 
 #  cluster_name = module.control_plane.cluster_id
-  cluster_name = "${var.cluster_name}-${random_string.eksname.result}"
+  cluster_name = "data.aws_eks_cluster.cluster"
 
   attach_node_cni_policy          = var.attach_node_cni_policy
   create_eks                      = var.create_eks
