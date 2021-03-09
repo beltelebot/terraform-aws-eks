@@ -95,7 +95,7 @@ module "worker_groups" {
 module "node_groups" {
   source = "./modules/node_groups"
 
-  cluster_name = data.aws_eks_cluster.cluster.cluster_id
+  cluster_name = data.aws_eks_cluster.cluster.name
 
   attach_node_cni_policy          = var.attach_node_cni_policy
   create_eks                      = var.create_eks
