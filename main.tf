@@ -98,6 +98,7 @@ module "node_groups" {
   cluster_name = module.control_plane.cluster_id
 
   attach_node_cni_policy          = var.attach_node_cni_policy
+  subnets                         = var.subnets
   create_eks                      = var.create_eks
   iam_path                        = var.iam_path
   manage_node_iam_resources       = var.manage_node_iam_resources
