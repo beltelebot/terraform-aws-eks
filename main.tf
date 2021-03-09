@@ -95,10 +95,9 @@ module "worker_groups" {
 module "node_groups" {
   source = "./modules/node_groups"
 
-  cluster_name = module.control_plane.cluster_id
+  cluster_name = data.control_plane.cluster_id
 
   attach_node_cni_policy          = var.attach_node_cni_policy
-  subnets                         = var.subnets
   create_eks                      = var.create_eks
   iam_path                        = var.iam_path
   manage_node_iam_resources       = var.manage_node_iam_resources
