@@ -1,6 +1,7 @@
 provider "aws" {
-  region var.region
- }
+  region = var.region
+}
+
 
 
 module "control_plane" {
