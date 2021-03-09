@@ -124,7 +124,7 @@ module "aws_auth" {
   source = "./modules/aws_auth"
 
   cluster_name  = module.control_plane.cluster_id
-  map_instances = concat(module.worker_groups.aws_auth_roles, module.node_groups.aws_auth_roles)
+  map_instances = concat(module.worker_groups.aws_auth_roles, module.eks-node-group.aws_auth_roles)
 
   create_eks           = var.create_eks
   manage_aws_auth      = var.manage_aws_auth
