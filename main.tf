@@ -40,8 +40,8 @@ module "control_plane" {
   cluster_iam_role_name                        = var.cluster_iam_role_name
   cluster_log_kms_key_id                       = var.cluster_log_kms_key_id
   cluster_log_retention_in_days                = var.cluster_log_retention_in_days
-#  cluster_name                                 = var.cluster_name
-  cluster_name = "${var.cluster_name}-${random_string.eksname.result}"
+  cluster_name                                 = var.cluster_name
+#  cluster_name = "${var.cluster_name}-${random_string.eksname.result}"
  
   cluster_security_group_id                    = var.cluster_security_group_id
   cluster_version                              = var.cluster_version
@@ -63,33 +63,63 @@ module "control_plane" {
   write_kubeconfig                             = var.write_kubeconfig
 }
 
-module "eks-node-group" {
-  source = "umotif-public/eks-node-group/aws"
-  version = "~> 3.0.0"
+module "worker_groups" {
+  source = "./modules/worker_groups"
+
+  cluster_name              = module.control_plane.cluster_id
+  cluster_security_group_id = module.control_plane.cluster_security_group_id
+
+  attach_worker_cni_policy              = var.attach_worker_cni_policy
+  create_eks                            = var.create_eks
+  iam_path                              = var.iam_path
+  manage_worker_iam_resources           = var.manage_worker_iam_resources
+  permissions_boundary                  = var.permissions_boundary
+  subnets                               = var.subnets
+  tags                                  = var.tags
+  vpc_id                                = var.vpc_id
+  worker_additional_security_group_ids  = var.worker_additional_security_group_ids
+  worker_ami_name_filter                = var.worker_ami_name_filter
+  worker_ami_name_filter_windows        = var.worker_ami_name_filter_windows
+  worker_ami_owner_id                   = var.worker_ami_owner_id
+  worker_ami_owner_id_windows           = var.worker_ami_owner_id_windows
+  worker_create_initial_lifecycle_hooks = var.worker_create_initial_lifecycle_hooks
+  worker_create_security_group          = var.worker_create_security_group
+  worker_groups                         = var.worker_groups
+  worker_groups_additional_policies     = var.worker_groups_additional_policies
+  worker_groups_defaults                = var.worker_groups_defaults
+  worker_groups_role_name               = var.worker_groups_role_name
+  worker_security_group_id              = var.worker_security_group_id
+  worker_sg_ingress_from_port           = var.worker_sg_ingress_from_port
+}
+
+module "node_groups" {
+  source = "./modules/node_groups"
 
   cluster_name = module.control_plane.cluster_id
 
-  subnet_ids = var.subnets
-
-  desired_size = 1
-  min_size     = 1
-  max_size     = 3
-
-  instance_types = ["t3.large"]
-#  capacity_type  = "SPOT"
-
-  ec2_ssh_key = "prodkey2"
-
-  kubernetes_labels = {
-    lifecycle = "OnDemand"
-  }
-
-  force_update_version = true
-
-  tags = {
-    Environment = "stage"
-  }
+  attach_node_cni_policy          = var.attach_node_cni_policy
+  create_eks                      = var.create_eks
+  iam_path                        = var.iam_path
+  manage_node_iam_resources       = var.manage_node_iam_resources
+  node_groups                     = var.node_groups
+  node_groups_additional_policies = var.node_groups_additional_policies
+  node_groups_defaults            = var.node_groups_defaults
+  node_groups_role_name           = var.node_groups_role_name
+  permissions_boundary            = var.permissions_boundary
+  subnets                         = var.subnets
+  tags                            = var.tags
 }
-  
 
+module "aws_auth" {
+  source = "./modules/aws_auth"
 
+  cluster_name  = module.control_plane.cluster_id
+  map_instances = concat(module.worker_groups.aws_auth_roles, module.node_groups.aws_auth_roles)
+
+  create_eks           = var.create_eks
+  manage_aws_auth      = var.manage_aws_auth
+  map_accounts         = var.map_accounts
+  map_roles            = var.map_roles
+  map_users            = var.map_users
+  wait_for_cluster_cmd = var.wait_for_cluster_cmd
+}
