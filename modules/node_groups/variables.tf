@@ -4,10 +4,10 @@ variable "create_eks" {
   default     = true
 }
 
-#variable "cluster_name" {
-#  description = "Name of parent cluster."
-#  type        = string
-#}
+variable "cluster_name" {
+  description = "Name of parent cluster."
+  type        = string
+}
 
 variable "tags" {
   description = "A map of tags to add to all resources."
