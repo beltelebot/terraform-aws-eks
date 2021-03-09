@@ -64,7 +64,7 @@ module "control_plane" {
 }
 
 module "worker_groups" {
-depends_on [module.control_plane]
+depends_on = [module.control_plane]
   source = "./modules/worker_groups"
 
   cluster_name = data.aws_eks_cluster.cluster.name
@@ -95,7 +95,7 @@ depends_on [module.control_plane]
 }
 
 module "node_groups" {
-  depends_on [module.control_plane]
+  depends_on = [module.control_plane]
   source = "./modules/node_groups"
 
   cluster_name = data.aws_eks_cluster.cluster.name
